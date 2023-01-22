@@ -1,12 +1,20 @@
-﻿using Unity.Mathematics;
+﻿using _Utils.NoisesLib.NoisesStructs.Commons;
+using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 namespace _Utils.NoisesLib
 {
     public static class GradientHelper
     {
-        public static float4 Line (SmallXXHash4 hash, float4 x) => (1f + hash.Floats01A) * select(-x, x, ((uint4)hash & 1 << 8) == 0);
-
+        
+        public static Sample4 Line (SmallXXHash4 hash, float4 x) {
+            float4 l = (1f + hash.Floats01A) * select(-1f, 1f, ((uint4)hash & 1 << 8) == 0);
+            return new Sample4 {
+                v = l * x,
+                dx = l
+            };
+        }
+        
         public static float4 Square (SmallXXHash4 hash, float4 x, float4 y) {
             float4x2 v = SquareVectors(hash);
             return v.c0 * x + v.c1 * y;

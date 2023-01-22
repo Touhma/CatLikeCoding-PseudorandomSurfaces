@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using _Utils.Interfaces;
+using _Utils.NoisesLib.NoisesStructs.Commons;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
@@ -8,7 +9,7 @@ namespace _Utils.LibNoises.Structs.Gradient
     public struct Simplex3D<G> : INoise where G : struct, IGradient
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float4 GetNoise4(float4x3 positions, SmallXXHash4 hash, int frequency)
+        public Sample4  GetNoise4(float4x3 positions, SmallXXHash4 hash, int frequency)
         {
             positions *= frequency * 0.6f;
             ;
@@ -72,7 +73,7 @@ namespace _Utils.LibNoises.Structs.Gradient
                 z = positions.c2 - lz + unskew;
             float4 f = 0.5f - x * x - y * y - z * z;
             f = f * f * f * 8f;
-            return max(0f, f) * default(G).Evaluate(hash, x, y, z);
+            return max(0f, f) * default(G).Evaluate(hash, x, y, z).v;
             ;
         }
     }

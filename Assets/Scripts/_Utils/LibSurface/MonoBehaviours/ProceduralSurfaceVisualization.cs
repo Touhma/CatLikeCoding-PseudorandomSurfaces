@@ -1,5 +1,8 @@
 using _Utils;
+using _Utils.LibNoises.Structs.Gradient;
 using _Utils.NoisesLib.NoisesStructs;
+using _Utils.Structs.NoiseStruct;
+using Jobs.Delegate;
 using ProceduralMeshes;
 using ProceduralMeshes.Generators;
 using ProceduralMeshes.Streams;
@@ -9,7 +12,7 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ProceduralSurfaceVisualization : MonoBehaviour
 {
-    private static AdvancedMeshJobScheduleDelegate[] jobs =
+    private static AdvancedMeshJobScheduleDelegate[] meshJobs =
     {
         MeshJob<SquareGrid, SingleStream>.ScheduleParallel,
         MeshJob<SharedSquareGrid, SingleStream>.ScheduleParallel,
@@ -24,6 +27,29 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
         MeshJob<GeoOctasphere, SingleStream>.ScheduleParallel,
         MeshJob<UVSphere, SingleStream>.ScheduleParallel
     };
+    
+    static SurfaceJobScheduleDelegate[,] surfaceJobs = {
+        {
+            SurfaceJob<Simplex1D<SimplexGradient>>.ScheduleParallel,
+            SurfaceJob<Simplex2D<SimplexGradient>>.ScheduleParallel,
+            SurfaceJob<Simplex3D<SimplexGradient>>.ScheduleParallel
+        },
+        {
+            SurfaceJob<Simplex1D<NoiseGradient>>.ScheduleParallel,
+            SurfaceJob<Simplex2D<NoiseGradient>>.ScheduleParallel,
+            SurfaceJob<Simplex3D<NoiseGradient>>.ScheduleParallel
+        }
+    };
+
+    public enum NoiseType {
+        Simplex, SimplexValue
+    }
+
+    [SerializeField]
+    NoiseType noiseType;
+
+    [SerializeField, Range(1, 3)]
+    int dimensions = 1;
 
     public enum MeshType
     {
@@ -210,13 +236,12 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
         Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
         Mesh.MeshData meshData = meshDataArray[0];
 
-        SurfaceJob<Lattice2D<LatticeNormal, NoisePerlin>>.ScheduleParallel(
-            meshData,
-            resolution,
-            noiseSettings,
-            domain,
-            displacement,
-            jobs[(int)meshType](mesh, meshData, resolution, default, new Vector3(0f, Mathf.Abs(displacement)), true)
+        surfaceJobs[(int)noiseType, dimensions - 1](
+            meshData, resolution, noiseSettings, domain, displacement,
+            meshJobs[(int)meshType](
+                mesh, meshData, resolution, default,
+                new Vector3(0f, Mathf.Abs(displacement)), true
+            )
         ).Complete();
 
         Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh);
