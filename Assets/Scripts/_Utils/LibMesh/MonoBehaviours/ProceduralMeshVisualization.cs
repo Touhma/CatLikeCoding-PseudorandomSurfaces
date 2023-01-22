@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class ProceduralMesh : MonoBehaviour {
+public class ProceduralSurfaceVisualization : MonoBehaviour {
 
 	static MeshJobScheduleDelegate[] jobs = {
 		MeshJob<SquareGrid, SingleStream>.ScheduleParallel,
@@ -50,7 +50,7 @@ public class ProceduralMesh : MonoBehaviour {
 	[SerializeField]
 	GizmoMode gizmos;
 
-	public enum MaterialMode { Flat, Ripple, LatLonMap, CubeMap }
+	public enum MaterialMode { Flat, LatLonMap, CubeMap }
 
 	[SerializeField]
 	MaterialMode material;

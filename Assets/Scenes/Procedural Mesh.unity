@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 236625718}
   - component: {fileID: 236625721}
   m_Layer: 0
-  m_Name: Procedural Mesh
+  m_Name: Procedural Surface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,10 +224,9 @@ MonoBehaviour:
   gizmos: 0
   material: 0
   materials:
-  - {fileID: 2100000, guid: 0741951777134eb99f9c217145f4d590, type: 2}
-  - {fileID: 2100000, guid: 5894f49c861f43e58ee55bdc7eb34cf5, type: 2}
-  - {fileID: 2100000, guid: 2e82cc05126f4bbcaef86e12cda1f2db, type: 2}
-  - {fileID: 2100000, guid: 35dbd7118b7a4303bea4840eb75b1199, type: 2}
+  - {fileID: 2100000, guid: 19f9ab30736b48cbbe665d9e49a89e91, type: 2}
+  - {fileID: 2100000, guid: 4e4f1166ebf3412592602afbfe9c059d, type: 2}
+  - {fileID: 2100000, guid: 6312c7154bf746ffad41cb80df82dfd2, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
