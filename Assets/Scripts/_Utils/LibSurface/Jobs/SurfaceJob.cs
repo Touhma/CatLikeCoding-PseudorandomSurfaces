@@ -23,6 +23,8 @@ public struct SurfaceJob<N> : IJobFor where N : struct, INoise
     float3x4 domainTRS;
 
     float displacement;
+    
+    float3x3 derivativeMatrix;
 
 
     public void Execute (int i) {
@@ -40,17 +42,26 @@ public struct SurfaceJob<N> : IJobFor where N : struct, INoise
         v.v2.position.y = noise.v.z;
         v.v3.position.y = noise.v.w;
         
-        float4 normalizer = rsqrt(noise.dx * noise.dx + 1f);
-        float4 tangentY = noise.dx * normalizer;
-        v.v0.tangent = float4(normalizer.x, tangentY.x, 0f, -1f);
-        v.v1.tangent = float4(normalizer.y, tangentY.y, 0f, -1f);
-        v.v2.tangent = float4(normalizer.z, tangentY.z, 0f, -1f);
-        v.v3.tangent = float4(normalizer.w, tangentY.w, 0f, -1f);
+        float4x3 dNoise =
+            derivativeMatrix.TransformVectors(noise.Derivatives);
+
+        float4 normalizer = rsqrt(dNoise.c0 * dNoise.c0 + 1f);
+        float4 tangent = dNoise.c0 * normalizer;
         
-        v.v0.normal = float3(-v.v0.tangent.y, v.v0.tangent.x, 0f);
-        v.v1.normal = float3(-v.v1.tangent.y, v.v1.tangent.x, 0f);
-        v.v2.normal = float3(-v.v2.tangent.y, v.v2.tangent.x, 0f);
-        v.v3.normal = float3(-v.v3.tangent.y, v.v3.tangent.x, 0f);
+        v.v0.tangent = float4(normalizer.x, tangent.x, 0f, -1f);
+        v.v1.tangent = float4(normalizer.y, tangent.y, 0f, -1f);
+        v.v2.tangent = float4(normalizer.z, tangent.z, 0f, -1f);
+        v.v3.tangent = float4(normalizer.w, tangent.w, 0f, -1f);
+        
+        normalizer = rsqrt(dNoise.c0 * dNoise.c0 + dNoise.c2 * dNoise.c2 + 1f);
+        
+        float4 normalX = -dNoise.c0 * normalizer;
+        float4 normalZ = -dNoise.c2 * normalizer;
+        
+        v.v0.normal = float3(normalX.x, normalizer.x, normalZ.x);
+        v.v1.normal = float3(normalX.y, normalizer.y, normalZ.y);
+        v.v2.normal = float3(normalX.z, normalizer.z, normalZ.z);
+        v.v3.normal = float3(normalX.w, normalizer.w, normalZ.w);
         
         vertices[i] = v;
     }
@@ -62,6 +73,7 @@ public struct SurfaceJob<N> : IJobFor where N : struct, INoise
         vertices = meshData.GetVertexData<Stream0>().Reinterpret<Vertex4>(12 * 4),
         settings = settings,
         domainTRS = domain.Matrix,
+        derivativeMatrix = domain.DerivativeMatrix,
         displacement = displacement
     }.ScheduleParallel(meshData.vertexCount / 4, resolution, dependency);
 }

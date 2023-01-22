@@ -1,4 +1,5 @@
 ﻿using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 namespace _Utils.NoisesLib.NoisesStructs.Commons
 {
@@ -37,5 +38,7 @@ namespace _Utils.NoisesLib.NoisesStructs.Commons
             dy = a.dy / b,
             dz = a.dz / b
         };
+        
+        public float4x3 Derivatives => float4x3(dx, dy, dz);
     }
 }
