@@ -6,8 +6,7 @@ using static Unity.Mathematics.math;
 namespace ProceduralMeshes.Generators {
 
 	public struct SharedCubeSphere : IMeshGenerator {
-
-		struct Side {
+		private struct Side {
 			public int id;
 			public float3 uvOrigin, uVector, vVector;
 			public int seamStep;
@@ -35,7 +34,7 @@ namespace ProceduralMeshes.Generators {
 
 			float3 pStart = side.uvOrigin + side.uVector * u / Resolution;
 			
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			if (i == 0) {
 				vertex.position = -sqrt(1f / 3f);
 				streams.SetVertex(0, vertex);
@@ -46,7 +45,7 @@ namespace ProceduralMeshes.Generators {
 			vertex.position = CubeToSphere(pStart);
 			streams.SetVertex(vi, vertex);
 
-			var triangle = int3(
+			int3 triangle = int3(
 				vi,
 				firstColumn && side.TouchesMinimumPole ? 0 : vi - Resolution,
 				vi + (firstColumn ?
@@ -88,11 +87,11 @@ namespace ProceduralMeshes.Generators {
 			));
 		}
 
-		static float3 CubeToSphere (float3 p) => p * sqrt(
+		private static float3 CubeToSphere (float3 p) => p * sqrt(
 			1f - ((p * p).yxx + (p * p).zzy) / 2f + (p * p).yxx * (p * p).zzy / 3f
 		);
 
-		static Side GetSide (int id) => id switch {
+		private static Side GetSide (int id) => id switch {
 			0 => new Side {
 				id = id,
 				uvOrigin = -1f,

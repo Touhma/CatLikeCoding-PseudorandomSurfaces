@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using ProceduralMeshes;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -8,15 +9,7 @@ using static Unity.Mathematics.math;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class AdvancedSingleStreamProceduralMesh : MonoBehaviour {
-
-	[StructLayout(LayoutKind.Sequential)]
-	struct Vertex {
-		public float3 position, normal;
-		public half4 tangent;
-		public half2 texCoord0;
-	}
-
-	void OnEnable () {
+	private void OnEnable () {
 		int vertexAttributeCount = 4;
 		int vertexCount = 4;
 		int triangleIndexCount = 6;
@@ -24,7 +17,7 @@ public class AdvancedSingleStreamProceduralMesh : MonoBehaviour {
 		Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
 		Mesh.MeshData meshData = meshDataArray[0];
 
-		var vertexAttributes = new NativeArray<VertexAttributeDescriptor>(
+		NativeArray<VertexAttributeDescriptor> vertexAttributes = new NativeArray<VertexAttributeDescriptor>(
 			vertexAttributeCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory
 		);
 		vertexAttributes[0] = new VertexAttributeDescriptor(dimension: 3);
@@ -44,7 +37,7 @@ public class AdvancedSingleStreamProceduralMesh : MonoBehaviour {
 
 		half h0 = half(0f), h1 = half(1f);
 
-		var vertex = new Vertex {
+		Vertex vertex = new Vertex {
 			normal = back(),
 			tangent = half4(h1, h0, h0, half(-1f))
 		};
@@ -74,7 +67,7 @@ public class AdvancedSingleStreamProceduralMesh : MonoBehaviour {
 		triangleIndices[4] = 2;
 		triangleIndices[5] = 3;
 
-		var bounds = new Bounds(new Vector3(0.5f, 0.5f), new Vector3(1f, 1f));
+		Bounds bounds = new Bounds(new Vector3(0.5f, 0.5f), new Vector3(1f, 1f));
 
 		meshData.subMeshCount = 1;
 		meshData.SetSubMesh(0, new SubMeshDescriptor(0, triangleIndexCount) {
@@ -82,7 +75,7 @@ public class AdvancedSingleStreamProceduralMesh : MonoBehaviour {
 			vertexCount = vertexCount
 		}, MeshUpdateFlags.DontRecalculateBounds);
 
-		var mesh = new Mesh {
+		Mesh mesh = new Mesh {
 			bounds = bounds,
 			name = "Procedural Mesh"
 		};

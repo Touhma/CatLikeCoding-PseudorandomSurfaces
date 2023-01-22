@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ProceduralMeshes.Commons;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
@@ -10,23 +11,17 @@ namespace ProceduralMeshes.Streams {
 
     public struct SingleStream : IMeshStreams {
 
-		[StructLayout(LayoutKind.Sequential)]
-		struct Stream0 {
-			public float3 position, normal;
-			public float4 tangent;
-			public float2 texCoord0;
-		}
 
 		[NativeDisableContainerSafetyRestriction]
-		NativeArray<Stream0> stream0;
+		private NativeArray<Stream0> stream0;
 
 		[NativeDisableContainerSafetyRestriction]
-		NativeArray<TriangleUInt16> triangles;
+		private NativeArray<TriangleUInt16> triangles;
 
 		public void Setup (
 			Mesh.MeshData meshData, Bounds bounds, int vertexCount, int indexCount
 		) {
-			var descriptor = new NativeArray<VertexAttributeDescriptor>(
+			NativeArray<VertexAttributeDescriptor> descriptor = new NativeArray<VertexAttributeDescriptor>(
 				4, Allocator.Temp, NativeArrayOptions.UninitializedMemory
 			);
 			descriptor[0] = new VertexAttributeDescriptor(dimension: 3);

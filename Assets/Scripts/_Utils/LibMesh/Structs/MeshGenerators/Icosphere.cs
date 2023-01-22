@@ -6,8 +6,7 @@ using static Unity.Mathematics.math;
 namespace ProceduralMeshes.Generators {
 
 	public struct Icosphere : IMeshGenerator {
-
-		struct Strip {
+		private struct Strip {
 			public int id;
 			public float3 lowLeftCorner, lowRightCorner, highLeftCorner, highRightCorner;
 		}
@@ -22,7 +21,7 @@ namespace ProceduralMeshes.Generators {
 
 		public int Resolution { get; set; }
 
-		int ResolutionV => 2 * Resolution;
+		private int ResolutionV => 2 * Resolution;
 
 		public void Execute<S> (int i, S streams) where S : struct, IMeshStreams {
 			int u = i / 5;
@@ -63,7 +62,7 @@ namespace ProceduralMeshes.Generators {
 				strip.highRightCorner + columnTopDir * ((float)u / Resolution - 1f);
 			float3 columnTopEnd = strip.highLeftCorner + columnTopDir * u / Resolution;
 
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			if (i == 0) {
 				vertex.position = down();
 				streams.SetVertex(0, vertex);
@@ -112,7 +111,7 @@ namespace ProceduralMeshes.Generators {
 			streams.SetTriangle(ti + 1, quad.xzw);
 		}
 
-		static Strip GetStrip (int id) => id switch {
+		private static Strip GetStrip (int id) => id switch {
 			0 => CreateStrip(0),
 			1 => CreateStrip(1),
 			2 => CreateStrip(2),
@@ -120,7 +119,7 @@ namespace ProceduralMeshes.Generators {
 			_ => CreateStrip(4)
 		};
 
-		static Strip CreateStrip (int id) => new Strip {
+		private static Strip CreateStrip (int id) => new Strip {
 			id = id,
 			lowLeftCorner = GetCorner(2 * id, -1),
 			lowRightCorner = GetCorner(id == 4 ? 0 : 2 * id + 2, -1),
@@ -128,7 +127,7 @@ namespace ProceduralMeshes.Generators {
 			highRightCorner = GetCorner(2 * id + 1, 1)
 		};
 
-		static float3 GetCorner (int id, int ySign) => float3(
+		private static float3 GetCorner (int id, int ySign) => float3(
 			0.4f * sqrt(5f) * sin(0.2f * PI * id),
 			ySign * 0.2f * sqrt(5f),
 			-0.4f * sqrt(5f) * cos(0.2f * PI * id)

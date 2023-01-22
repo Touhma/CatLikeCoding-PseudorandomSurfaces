@@ -26,8 +26,8 @@ namespace ProceduralMeshes.Generators {
 			float uOffset = 0f;
 
 			int iA = -Resolution - 2, iB = -Resolution - 1, iC = -1, iD = 0;
-			var tA = int3(iA, iC, iD);
-			var tB = int3(iA, iD, iB);
+			int3 tA = int3(iA, iC, iD);
+			int3 tB = int3(iA, iD, iB);
 
 			if ((z & 1) == 1) {
 				xOffset = 0.25f;
@@ -38,7 +38,7 @@ namespace ProceduralMeshes.Generators {
 
 			xOffset = xOffset / Resolution - 0.5f;
 
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			vertex.normal.y = 1f;
 			vertex.tangent.xw = float2(1f, -1f);
 

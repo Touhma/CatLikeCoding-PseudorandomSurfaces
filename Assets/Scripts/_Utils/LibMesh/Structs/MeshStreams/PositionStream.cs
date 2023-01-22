@@ -11,15 +11,15 @@ namespace ProceduralMeshes.Streams {
 	public struct PositionStream : IMeshStreams {
 
 		[NativeDisableContainerSafetyRestriction]
-		NativeArray<float3> stream0;
+		private NativeArray<float3> stream0;
 
 		[NativeDisableContainerSafetyRestriction]
-		NativeArray<TriangleUInt16> triangles;
+		private NativeArray<TriangleUInt16> triangles;
 
 		public void Setup (
 			Mesh.MeshData meshData, Bounds bounds, int vertexCount, int indexCount
 		) {
-			var descriptor = new NativeArray<VertexAttributeDescriptor>(
+			NativeArray<VertexAttributeDescriptor> descriptor = new NativeArray<VertexAttributeDescriptor>(
 				1, Allocator.Temp, NativeArrayOptions.UninitializedMemory
 			);
 			descriptor[0] = new VertexAttributeDescriptor(dimension: 3);

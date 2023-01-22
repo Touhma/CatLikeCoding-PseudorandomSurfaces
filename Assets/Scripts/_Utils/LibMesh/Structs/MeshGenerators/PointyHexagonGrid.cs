@@ -34,12 +34,12 @@ namespace ProceduralMeshes.Generators {
 			}
 
 			for (int x = 0; x < Resolution; x++, vi += 7, ti += 6) {
-				var center = (float2(2f * h * x, 0.75f * z) + centerOffset) / Resolution;
-				var xCoordinates = center.x + float2(-h, h) / Resolution;
-				var zCoordinates =
+				float2 center = (float2(2f * h * x, 0.75f * z) + centerOffset) / Resolution;
+				float2 xCoordinates = center.x + float2(-h, h) / Resolution;
+				float4 zCoordinates =
 					center.y + float4(-0.5f, -0.25f, 0.25f, 0.5f) / Resolution;
 
-				var vertex = new Vertex();
+				Vertex vertex = new Vertex();
 				vertex.normal.y = 1f;
 				vertex.tangent.xw = float2(1f, -1f);
 

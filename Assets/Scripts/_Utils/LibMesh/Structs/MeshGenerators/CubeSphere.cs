@@ -6,8 +6,7 @@ using static Unity.Mathematics.math;
 namespace ProceduralMeshes.Generators {
 
 	public struct CubeSphere : IMeshGenerator {
-
-		struct Side {
+		private struct Side {
 			public int id;
 			public float3 uvOrigin, uVector, vVector;
 		}
@@ -32,7 +31,7 @@ namespace ProceduralMeshes.Generators {
 			float3 uB = side.uvOrigin + side.uVector * (u + 1) / Resolution;
 			float3 pA = CubeToSphere(uA), pB = CubeToSphere(uB);
 
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			vertex.tangent = float4(normalize(pB - pA), -1f);
 
 			for (int v = 1; v <= Resolution; v++, vi += 4, ti += 2) {
@@ -69,11 +68,11 @@ namespace ProceduralMeshes.Generators {
 			}
 		}
 
-		static float3 CubeToSphere (float3 p) => p * sqrt(
+		private static float3 CubeToSphere (float3 p) => p * sqrt(
 			1f - ((p * p).yxx + (p * p).zzy) / 2f + (p * p).yxx * (p * p).zzy / 3f
 		);
 
-		static Side GetSide (int id) => id switch
+		private static Side GetSide (int id) => id switch
 		{
 			0 => new Side {
 				id = id,

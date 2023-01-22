@@ -8,8 +8,7 @@ using quaternion = Unity.Mathematics.quaternion;
 namespace ProceduralMeshes.Generators {
 
 	public struct GeoOctasphere : IMeshGenerator {
-
-		struct Rhombus {
+		private struct Rhombus {
 			public int id;
 			public float3 leftCorner, rightCorner;
 		}
@@ -51,7 +50,7 @@ namespace ProceduralMeshes.Generators {
 
 			u += 1;
 
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			sincos(PI + PI * u / (2 * Resolution), out float sine, out vertex.position.y);
 			vertex.position -= sine * rhombus.rightCorner;
 			vertex.normal = vertex.position;
@@ -95,7 +94,7 @@ namespace ProceduralMeshes.Generators {
 		}
 
 		public void ExecutePolesAndSeam<S> (S streams) where S : struct, IMeshStreams {
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			vertex.tangent = float4(sqrt(0.5f), 0f, sqrt(0.5f), -1f);
 			vertex.texCoord0.x = 0.125f;
 
@@ -124,7 +123,7 @@ namespace ProceduralMeshes.Generators {
 			}
 		}
 
-		static Rhombus GetRhombus (int id) => id switch {
+		private static Rhombus GetRhombus (int id) => id switch {
 			0 => new Rhombus {
 				id = id,
 				leftCorner = back(),
@@ -147,10 +146,10 @@ namespace ProceduralMeshes.Generators {
 			}
 		};
 
-		static float2 GetTangentXZ (float3 p) => normalize(float2(-p.z, p.x));
+		private static float2 GetTangentXZ (float3 p) => normalize(float2(-p.z, p.x));
 
-		static float2 GetTexCoord (float3 p) {
-			var texCoord = float2(
+		private static float2 GetTexCoord (float3 p) {
+			float2 texCoord = float2(
 				atan2(p.x, p.z) / (-2f * PI) + 0.5f,
 				asin(p.y) / PI + 0.5f
 			);

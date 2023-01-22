@@ -218,12 +218,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c91e88462e4737b4a93f7225790b6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshType: 0
+  recalculateNormals: 1
+  recalculateTangents: 1
+  meshType: 1
   meshOptimization: 0
-  resolution: 1
+  resolution: 16
+  displacement: 0.5
+  noiseSettings:
+    seed: 0
+    frequency: 4
+    octaves: 1
+    lacunarity: 2
+    persistence: 0.5
+  domain:
+    translation:
+      x: 0
+      y: 0
+      z: 0
+    rotation:
+      x: 0
+      y: 0
+      z: 0
+    scale:
+      x: 1
+      y: 1
+      z: 1
   gizmos: 0
   material: 0
   materials:
+  - {fileID: 2100000, guid: c142001c17a853e46a75d0f852e14fe2, type: 2}
   - {fileID: 2100000, guid: 19f9ab30736b48cbbe665d9e49a89e91, type: 2}
   - {fileID: 2100000, guid: 4e4f1166ebf3412592602afbfe9c059d, type: 2}
   - {fileID: 2100000, guid: 6312c7154bf746ffad41cb80df82dfd2, type: 2}

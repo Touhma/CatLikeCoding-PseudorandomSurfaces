@@ -50,5 +50,7 @@ namespace Jobs
             settings = settings,
             domainTRS = domainTRS.Matrix,
         }.ScheduleParallel(positions.Length, resolution, dependency);
+        
+        public delegate JobHandle ScheduleDelegate (NativeArray<float3x4> positions, NativeArray<float4> noise, NoiseSettings settings, SpaceTRS domainTRS, int resolution, JobHandle dependency);
     }
 }

@@ -17,9 +17,9 @@ namespace ProceduralMeshes.Generators {
 
 		public int Resolution { get; set; }
 
-		int ResolutionU => 4 * Resolution;
+		private int ResolutionU => 4 * Resolution;
 
-		int ResolutionV => 2 * Resolution;
+		private int ResolutionV => 2 * Resolution;
 
 		public void Execute<S> (int u, S streams) where S : struct, IMeshStreams {
 			if (u == 0) {
@@ -33,7 +33,7 @@ namespace ProceduralMeshes.Generators {
 		public void ExecuteRegular<S> (int u, S streams) where S : struct, IMeshStreams {
 			int vi = (ResolutionV + 1) * u - 2, ti = 2 * (ResolutionV - 1) * (u - 1);
 
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			vertex.position.y = vertex.normal.y = -1f;
 			sincos(
 				2f * PI * (u - 0.5f) / ResolutionU,
@@ -80,7 +80,7 @@ namespace ProceduralMeshes.Generators {
 		}
 
 		public void ExecuteSeam<S> (S streams) where S : struct, IMeshStreams {
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			vertex.tangent.x = 1f;
 			vertex.tangent.w = -1f;
 

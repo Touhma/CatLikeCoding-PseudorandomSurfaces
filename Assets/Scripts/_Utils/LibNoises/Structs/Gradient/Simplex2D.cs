@@ -33,7 +33,7 @@ namespace _Utils.LibNoises.Structs.Gradient
             );
         }
 
-        static float4 Kernel(
+        private static float4 Kernel(
             SmallXXHash4 hash, float4 lx, float4 lz, float4x3 positions
         )
         {

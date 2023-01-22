@@ -21,10 +21,10 @@ namespace ProceduralMeshes.Generators {
 			int vi = 4 * Resolution * z, ti = 2 * Resolution * z;
 
 			for (int x = 0; x < Resolution; x++, vi += 4, ti += 2) {
-				var xCoordinates = float2(x, x + 1f) / Resolution - 0.5f;
-				var zCoordinates = float2(z, z + 1f) / Resolution - 0.5f;
+				float2 xCoordinates = float2(x, x + 1f) / Resolution - 0.5f;
+				float2 zCoordinates = float2(z, z + 1f) / Resolution - 0.5f;
 
-				var vertex = new Vertex();
+				Vertex vertex = new Vertex();
 				vertex.normal.y = 1f;
 				vertex.tangent.xw = float2(1f, -1f);
 

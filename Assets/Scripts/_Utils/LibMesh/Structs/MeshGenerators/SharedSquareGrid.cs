@@ -20,7 +20,7 @@ namespace ProceduralMeshes.Generators {
 		public void Execute<S> (int z, S streams) where S : struct, IMeshStreams {
 			int vi = (Resolution + 1) * z, ti = 2 * Resolution * (z - 1);
 
-			var vertex = new Vertex();
+			Vertex vertex = new Vertex();
 			vertex.normal.y = 1f;
 			vertex.tangent.xw = float2(1f, -1f);
 
