@@ -19,22 +19,25 @@ namespace _Utils.NoisesLib.NoisesStructs
                 x = l.GetLatticeSpan4(positions.c0, frequency),
                 z = l.GetLatticeSpan4(positions.c2, frequency);
 
-            float4x2 minima = 2f;
+            VoronoiData data = default;
+            data.a.v = data.b.v = 2f;
             for (int u = -1; u <= 1; u++) {
                 SmallXXHash4 hx = hash.Eat(l.ValidateSingleStep(x.p0 + u, frequency));
                 float4 xOffset = u - x.g0;
                 for (int v = -1; v <= 1; v++) {
                     SmallXXHash4 h = hx.Eat(l.ValidateSingleStep(z.p0 + v, frequency));
                     float4 zOffset = v - z.g0;
-                    minima = VoronoiHelper.UpdateVoronoiMinima(minima, d.GetDistance(
+                    data = VoronoiHelper.UpdateVoronoiData(data, d.GetDistance(
                         h.Floats01A + xOffset, h.Floats01B + zOffset
                     ));
-                    minima = VoronoiHelper.UpdateVoronoiMinima(minima, d.GetDistance(
+                    data = VoronoiHelper.UpdateVoronoiData(data, d.GetDistance(
                         h.Floats01C + xOffset, h.Floats01D + zOffset
                     ));
                 }
             }
-            return default(F).Evaluate(d.Finalize2D(minima));
+            Sample4 s = default(F).Evaluate(d.Finalize2D(data));
+            s.dx *= frequency;
+            return s;
         }
     }
 }

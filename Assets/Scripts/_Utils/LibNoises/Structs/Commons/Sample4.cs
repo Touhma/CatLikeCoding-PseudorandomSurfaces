@@ -40,5 +40,17 @@ namespace _Utils.NoisesLib.NoisesStructs.Commons
         };
         
         public float4x3 Derivatives => float4x3(dx, dy, dz);
+        
+        public Sample4 Smoothstep {
+            get {
+                Sample4 s = this;
+                float4 d = 6f * v * (1f - v);
+                s.dx *= d;
+                s.dy *= d;
+                s.dz *= d;
+                s.v *= v * (3f - 2f * v);
+                return s;
+            }
+        }
     }
 }

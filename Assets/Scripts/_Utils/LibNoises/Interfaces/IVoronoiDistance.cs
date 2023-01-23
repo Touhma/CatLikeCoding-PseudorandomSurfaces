@@ -1,18 +1,25 @@
-﻿using Unity.Mathematics;
+﻿using _Utils.NoisesLib.NoisesStructs;
+using _Utils.NoisesLib.NoisesStructs.Commons;
+using Unity.Mathematics;
 
 namespace _Utils.Interfaces
 {
-    public interface IVoronoiDistance {
-        float4 GetDistance (float4 x);
+    public interface IVoronoiDistance
+    {
+        Sample4 GetDistance(float4 x);
 
-        float4 GetDistance (float4 x, float4 y);
+        Sample4 GetDistance(float4 x, float4 y);
 
-        float4 GetDistance (float4 x, float4 y, float4 z);
+        Sample4 GetDistance(float4 x, float4 y, float4 z);
 
-        float4x2 Finalize1D (float4x2 minima);
+        VoronoiData Finalize1D(VoronoiData data);
 
-        float4x2 Finalize2D (float4x2 minima);
+        VoronoiData Finalize2D(VoronoiData data);
 
-        float4x2 Finalize3D (float4x2 minima);
+        VoronoiData Finalize3D(VoronoiData data);
+        
+        VoronoiData UpdateVoronoiData (VoronoiData data, Sample4 sample);
+
+        VoronoiData InitialData { get; }
     }
 }

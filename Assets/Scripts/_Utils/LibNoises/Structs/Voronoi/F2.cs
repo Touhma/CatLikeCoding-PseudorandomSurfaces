@@ -1,10 +1,11 @@
 ﻿using _Utils.Interfaces;
+using _Utils.NoisesLib.NoisesStructs.Commons;
 using Unity.Mathematics;
 
 namespace _Utils.NoisesLib.NoisesStructs
 {
     public struct F2 : IVoronoiFunction {
 
-        public float4 Evaluate (float4x2 distances) => distances.c1;
+        public Sample4 Evaluate (VoronoiData data) => data.b;
     }
 }

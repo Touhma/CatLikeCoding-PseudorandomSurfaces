@@ -1,8 +1,9 @@
-﻿using Unity.Mathematics;
+﻿using _Utils.NoisesLib.NoisesStructs;
+using _Utils.NoisesLib.NoisesStructs.Commons;
 
 namespace _Utils.Interfaces
 {
     public interface IVoronoiFunction {
-        float4 Evaluate (float4x2 minima);
+        Sample4  Evaluate (VoronoiData  data);
     }
 }

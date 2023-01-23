@@ -17,13 +17,16 @@ namespace _Utils.NoisesLib.NoisesStructs
             D d = default;
             LatticeSpan4 x = l.GetLatticeSpan4(positions.c0, frequency);
 
-            float4x2 minima = 2f;
+            VoronoiData data = d.InitialData;
+            data.a.v = data.b.v = 2f;
             for (int u = -1; u <= 1; u++) {
                 SmallXXHash4 h = hash.Eat(l.ValidateSingleStep(x.p0 + u, frequency));
-                minima =
-                    VoronoiHelper.UpdateVoronoiMinima(minima, d.GetDistance(h.Floats01A + u - x.g0));
+                data = d.UpdateVoronoiData(data, d.GetDistance(h.Floats01A + u - x.g0));
             }
-            return default(F).Evaluate(d.Finalize1D(minima));
+            Sample4 s = default(F).Evaluate(d.Finalize1D(data));
+            s.dx *= frequency;
+            return s;
+
         }
     }
 }
