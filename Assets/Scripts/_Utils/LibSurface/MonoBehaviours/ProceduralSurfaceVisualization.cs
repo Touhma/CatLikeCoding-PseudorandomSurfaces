@@ -30,60 +30,75 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
     
     static SurfaceJobScheduleDelegate[,] surfaceJobs = {
         {
-            SurfaceJob<Simplex1D<SimplexGradient>>.ScheduleParallel,
-            SurfaceJob<Simplex2D<SimplexGradient>>.ScheduleParallel,
-            SurfaceJob<Simplex3D<SimplexGradient>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Simplex1D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel,
-            SurfaceJob<Simplex2D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel,
-            SurfaceJob<Simplex3D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Simplex1D<NoiseGradient>>.ScheduleParallel,
-            SurfaceJob<Simplex2D<NoiseGradient>>.ScheduleParallel,
-            SurfaceJob<Simplex3D<NoiseGradient>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, Worley, F1>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, Worley, F1>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, Worley, F1>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, Worley, F2>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, Worley, F2>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, WorleySmooth, F1>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, WorleySmooth, F1>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, WorleySmooth, F1>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, WorleySmooth, F2>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, WorleySmooth, F2>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, WorleySmooth, F2>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, Worley, F1>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, Chebyshev, F1>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, Chebyshev, F1>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, Chebyshev, F2>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, Chebyshev, F2>>.ScheduleParallel
-        },
-        {
-            SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
-            SurfaceJob<Voronoi2D<LatticeNormal, Chebyshev, F2MinusF1>>.ScheduleParallel,
-            SurfaceJob<Voronoi3D<LatticeNormal, Chebyshev, F2MinusF1>>.ScheduleParallel
-        }
+			SurfaceJob<Lattice1D<LatticeNormal, NoisePerlin>>.ScheduleParallel,
+			SurfaceJob<Lattice2D<LatticeNormal, NoisePerlin>>.ScheduleParallel,
+			SurfaceJob<Lattice3D<LatticeNormal, NoisePerlin>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Lattice1D<LatticeNormal, Smoothstep<NoiseTurbulence<NoisePerlin>>>>.ScheduleParallel,
+			SurfaceJob<Lattice2D<LatticeNormal, Smoothstep<NoiseTurbulence<NoisePerlin>>>>.ScheduleParallel,
+			SurfaceJob<Lattice3D<LatticeNormal, Smoothstep<NoiseTurbulence<NoisePerlin>>>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Lattice1D<LatticeNormal, NoiseGradient>>.ScheduleParallel,
+			SurfaceJob<Lattice2D<LatticeNormal, NoiseGradient>>.ScheduleParallel,
+			SurfaceJob<Lattice3D<LatticeNormal, NoiseGradient>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Simplex1D<SimplexGradient>>.ScheduleParallel,
+			SurfaceJob<Simplex2D<SimplexGradient>>.ScheduleParallel,
+			SurfaceJob<Simplex3D<SimplexGradient>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Simplex1D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel,
+			SurfaceJob<Simplex2D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel,
+			SurfaceJob<Simplex3D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Simplex1D<NoiseGradient>>.ScheduleParallel,
+			SurfaceJob<Simplex2D<NoiseGradient>>.ScheduleParallel,
+			SurfaceJob<Simplex3D<NoiseGradient>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, Worley, F1>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, Worley, F1>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, Worley, F1>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, Worley, F2>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, Worley, F2>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, WorleySmooth, F1>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, WorleySmooth, F1>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, WorleySmooth, F1>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, WorleySmooth, F2>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, WorleySmooth, F2>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, WorleySmooth, F2>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, Worley, F1>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, Chebyshev, F1>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, Chebyshev, F1>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, Chebyshev, F2>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, Chebyshev, F2>>.ScheduleParallel
+		},
+		{
+			SurfaceJob<Voronoi1D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
+			SurfaceJob<Voronoi2D<LatticeNormal, Chebyshev, F2MinusF1>>.ScheduleParallel,
+			SurfaceJob<Voronoi3D<LatticeNormal, Chebyshev, F2MinusF1>>.ScheduleParallel
+		}
     };
 
     public enum NoiseType {
