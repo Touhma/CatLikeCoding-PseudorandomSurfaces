@@ -224,7 +224,7 @@ MonoBehaviour:
   recalculateNormals: 0
   recalculateTangents: 0
   meshOptimization: 0
-  resolution: 24
+  resolution: 200
   displacement: 0.25
   noiseSettings:
     seed: 0

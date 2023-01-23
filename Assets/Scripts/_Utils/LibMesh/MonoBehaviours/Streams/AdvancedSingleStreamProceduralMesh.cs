@@ -25,21 +25,21 @@ public class AdvancedSingleStreamProceduralMesh : MonoBehaviour {
 			VertexAttribute.Normal, dimension: 3
 		);
 		vertexAttributes[2] = new VertexAttributeDescriptor(
-			VertexAttribute.Tangent, VertexAttributeFormat.Float16, 4
+			VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4
 		);
 		vertexAttributes[3] = new VertexAttributeDescriptor(
-			VertexAttribute.TexCoord0, VertexAttributeFormat.Float16, 2
+			VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2
 		);
 		meshData.SetVertexBufferParams(vertexCount, vertexAttributes);
 		vertexAttributes.Dispose();
 
 		NativeArray<Vertex> vertices = meshData.GetVertexData<Vertex>();
 
-		half h0 = half(0f), h1 = half(1f);
+		float h0 = 0f, h1 = 1f;
 
 		Vertex vertex = new Vertex {
 			normal = back(),
-			tangent = half4(h1, h0, h0, half(-1f))
+			tangent = float4(h1, h0, h0, -1f)
 		};
 
 		vertex.position = 0f;
@@ -47,19 +47,19 @@ public class AdvancedSingleStreamProceduralMesh : MonoBehaviour {
 		vertices[0] = vertex;
 
 		vertex.position = right();
-		vertex.texCoord0 = half2(h1, h0);
+		vertex.texCoord0 = float2(h1, h0);
 		vertices[1] = vertex;
 
 		vertex.position = up();
-		vertex.texCoord0 = half2(h0, h1);
+		vertex.texCoord0 = float2(h0, h1);
 		vertices[2] = vertex;
 
 		vertex.position = float3(1f, 1f, 0f);
 		vertex.texCoord0 = h1;
 		vertices[3] = vertex;
 
-		meshData.SetIndexBufferParams(triangleIndexCount, IndexFormat.UInt16);
-		NativeArray<ushort> triangleIndices = meshData.GetIndexData<ushort>();
+		meshData.SetIndexBufferParams(triangleIndexCount, IndexFormat.UInt32);
+		NativeArray<uint> triangleIndices = meshData.GetIndexData<uint>();
 		triangleIndices[0] = 0;
 		triangleIndices[1] = 2;
 		triangleIndices[2] = 1;

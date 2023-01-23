@@ -148,7 +148,7 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
 
     [SerializeField] private MeshOptimizationMode meshOptimization;
 
-    [SerializeField, Range(1, 50)] private int resolution = 1;
+    [SerializeField, Range(1, 300)] private int resolution = 1;
 
     [SerializeField, Range(-1f, 1f)] float displacement = 0.5f;
 
