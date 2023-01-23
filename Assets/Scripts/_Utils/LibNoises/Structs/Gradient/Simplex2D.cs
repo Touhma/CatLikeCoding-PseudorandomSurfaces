@@ -27,23 +27,29 @@ namespace _Utils.LibNoises.Structs.Gradient
                 h1 = hash.Eat(x1),
                 hC = SmallXXHash4.Select(h0, h1, xGz);
 
-            return default(G).EvaluateCombined(
+            Sample4 s = default(G).EvaluateCombined(
                 Kernel(h0.Eat(z0), x0, z0, positions) +
                 Kernel(h1.Eat(z1), x1, z1, positions) +
                 Kernel(hC.Eat(zC), xC, zC, positions)
             );
+            s.dx *= frequency * (1f / sqrt(3f));
+            s.dz *= frequency * (1f / sqrt(3f));
+            return s;
         }
 
-        private static float4 Kernel(
+        private static Sample4  Kernel(
             SmallXXHash4 hash, float4 lx, float4 lz, float4x3 positions
         )
         {
             float4 unskew = (lx + lz) * ((3f - sqrt(3f)) / 6f);
             float4 x = positions.c0 - lx + unskew, z = positions.c2 - lz + unskew;
             float4 f = 0.5f - x * x - z * z;
-            f = f * f * f * 8f;
-            ;
-            return max(0f, f) * default(G).Evaluate(hash, x, z).v;
+            Sample4 g = default(G).Evaluate(hash, x, z);
+            return new Sample4 {
+                v = f * g.v,
+                dx = f * g.dx - 6f * x * g.v,
+                dz = f * g.dz - 6f * z * g.v
+            } * f * f * select(0f, 8f, f >= 0f);
         }
     }
 }

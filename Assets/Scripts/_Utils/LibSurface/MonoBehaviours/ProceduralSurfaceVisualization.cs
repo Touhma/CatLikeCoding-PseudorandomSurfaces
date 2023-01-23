@@ -35,6 +35,11 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
             SurfaceJob<Simplex3D<SimplexGradient>>.ScheduleParallel
         },
         {
+            SurfaceJob<Simplex1D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel,
+            SurfaceJob<Simplex2D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel,
+            SurfaceJob<Simplex3D<Smoothstep<NoiseTurbulence<SimplexGradient>>>>.ScheduleParallel
+        },
+        {
             SurfaceJob<Simplex1D<NoiseGradient>>.ScheduleParallel,
             SurfaceJob<Simplex2D<NoiseGradient>>.ScheduleParallel,
             SurfaceJob<Simplex3D<NoiseGradient>>.ScheduleParallel
@@ -42,7 +47,7 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
     };
 
     public enum NoiseType {
-        Simplex, SimplexValue
+        Simplex, SimplexSmoothTurbulence, SimplexValue
     }
 
     [SerializeField]

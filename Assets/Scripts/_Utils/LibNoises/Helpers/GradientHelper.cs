@@ -20,9 +20,13 @@ namespace _Utils.NoisesLib
             return v.c0 * x + v.c1 * y;
         }
 	
-        public static float4 Circle (SmallXXHash4 hash, float4 x, float4 y) {
+        public static Sample4  Circle (SmallXXHash4 hash, float4 x, float4 y) {
             float4x2 v = SquareVectors(hash);
-            return (v.c0 * x + v.c1 * y) * rsqrt(v.c0 * v.c0 + v.c1 * v.c1);
+            return new Sample4 {
+                v = v.c0 * x + v.c1 * y,
+                dx = v.c0,
+                dz = v.c1
+            } * rsqrt(v.c0 * v.c0 + v.c1 * v.c1);
         }
 	
         public static float4 Octahedron (
@@ -32,11 +36,14 @@ namespace _Utils.NoisesLib
             return v.c0 * x + v.c1 * y + v.c2 * z;
         }
 
-        public static float4 Sphere (SmallXXHash4 hash, float4 x, float4 y, float4 z) {
+        public static Sample4  Sphere (SmallXXHash4 hash, float4 x, float4 y, float4 z) {
             float4x3 v = OctahedronVectors(hash);
-            return
-                (v.c0 * x + v.c1 * y + v.c2 * z) *
-                rsqrt(v.c0 * v.c0 + v.c1 * v.c1 + v.c2 * v.c2);
+            return new Sample4 {
+                v = v.c0 * x + v.c1 * y + v.c2 * z,
+                dx = v.c0,
+                dy = v.c1,
+                dz = v.c2
+            } * rsqrt(v.c0 * v.c0 + v.c1 * v.c1 + v.c2 * v.c2);
         }
         
         private static float4x2 SquareVectors (SmallXXHash4 hash) {

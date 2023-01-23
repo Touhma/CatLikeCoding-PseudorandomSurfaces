@@ -12,9 +12,7 @@ namespace _Utils.LibNoises.Structs.Gradient
         public Sample4  GetNoise4(float4x3 positions, SmallXXHash4 hash, int frequency)
         {
             positions *= frequency * 0.6f;
-            ;
             float4 skew = (positions.c0 + positions.c1 + positions.c2) * (1f / 3f);
-            ;
             float4
                 sx = positions.c0 + skew,
                 sy = positions.c1 + skew,
@@ -54,15 +52,19 @@ namespace _Utils.LibNoises.Structs.Gradient
                 hA = SmallXXHash4.Select(h0, h1, xA),
                 hB = SmallXXHash4.Select(h0, h1, xB);
 
-            return default(G).EvaluateCombined(
+            Sample4 s = default(G).EvaluateCombined(
                 Kernel(h0.Eat(y0).Eat(z0), x0, y0, z0, positions) +
                 Kernel(h1.Eat(y1).Eat(z1), x1, y1, z1, positions) +
                 Kernel(hA.Eat(yCA).Eat(zCA), xCA, yCA, zCA, positions) +
                 Kernel(hB.Eat(yCB).Eat(zCB), xCB, yCB, zCB, positions)
             );
+            s.dx *= frequency * 0.6f;
+            s.dy *= frequency * 0.6f;
+            s.dz *= frequency * 0.6f;
+            return s;
         }
 
-        private static float4 Kernel(
+        private Sample4 Kernel(
             SmallXXHash4 hash, float4 lx, float4 ly, float4 lz, float4x3 positions
         )
         {
@@ -72,9 +74,13 @@ namespace _Utils.LibNoises.Structs.Gradient
                 y = positions.c1 - ly + unskew,
                 z = positions.c2 - lz + unskew;
             float4 f = 0.5f - x * x - y * y - z * z;
-            f = f * f * f * 8f;
-            return max(0f, f) * default(G).Evaluate(hash, x, y, z).v;
-            ;
+            Sample4 g = default(G).Evaluate(hash, x, y, z);
+            return new Sample4 {
+                v = f * g.v,
+                dx = f * g.dx - 6f * x * g.v,
+                dy = f * g.dy - 6f * y * g.v,
+                dz = f * g.dz - 6f * z * g.v
+            } * f * f * select(0f, 8f, f >= 0f);
         }
     }
 }
