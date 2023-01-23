@@ -218,17 +218,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c91e88462e4737b4a93f7225790b6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noiseType: 9
-  dimensions: 2
-  recalculateNormals: 1
-  recalculateTangents: 1
-  meshType: 1
+  meshType: 8
+  noiseType: 3
+  dimensions: 3
+  recalculateNormals: 0
+  recalculateTangents: 0
   meshOptimization: 0
-  resolution: 16
-  displacement: 0.5
+  resolution: 24
+  displacement: 0.25
   noiseSettings:
     seed: 0
-    frequency: 4
+    frequency: 2
     octaves: 1
     lacunarity: 2
     persistence: 0.5

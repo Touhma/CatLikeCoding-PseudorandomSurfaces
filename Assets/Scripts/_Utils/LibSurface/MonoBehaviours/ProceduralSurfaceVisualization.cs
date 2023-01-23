@@ -12,6 +12,8 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ProceduralSurfaceVisualization : MonoBehaviour
 {
+    static int materialIsPlaneId = Shader.PropertyToID("_IsPlane");
+    
     private static AdvancedMeshJobScheduleDelegate[] meshJobs =
     {
         MeshJob<SquareGrid, SingleStream>.ScheduleParallel,
@@ -20,13 +22,31 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
         MeshJob<FlatHexagonGrid, SingleStream>.ScheduleParallel,
         MeshJob<PointyHexagonGrid, SingleStream>.ScheduleParallel,
         MeshJob<CubeSphere, SingleStream>.ScheduleParallel,
-        MeshJob<SharedCubeSphere, PositionStream>.ScheduleParallel,
-        MeshJob<Icosphere, PositionStream>.ScheduleParallel,
-        MeshJob<GeoIcosphere, PositionStream>.ScheduleParallel,
+        MeshJob<SharedCubeSphere, SingleStream>.ScheduleParallel,
+        MeshJob<Icosphere, SingleStream>.ScheduleParallel,
+        MeshJob<GeoIcosphere, SingleStream>.ScheduleParallel,
         MeshJob<Octasphere, SingleStream>.ScheduleParallel,
         MeshJob<GeoOctasphere, SingleStream>.ScheduleParallel,
         MeshJob<UVSphere, SingleStream>.ScheduleParallel
     };
+    
+    public enum MeshType
+    {
+        SquareGrid,
+        SharedSquareGrid,
+        SharedTriangleGrid,
+        FlatHexagonGrid,
+        PointyHexagonGrid,
+        CubeSphere,
+        SharedCubeSphere,
+        Icosphere,
+        GeoIcosphere,
+        Octasphere,
+        GeoOctasphere,
+        UVSphere
+    };
+    
+    [SerializeField] private MeshType meshType;
     
     static SurfaceJobScheduleDelegate[,] surfaceJobs = {
         {
@@ -104,7 +124,8 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
     public enum NoiseType {
         Perlin, PerlinSmoothTurbulence, PerlinValue,
         Simplex, SimplexSmoothTurbulence, SimplexValue,
-        VoronoiWorleyF1, VoronoiWorleyF2, VoronoiWorleyF2MinusF1, VoronoiWorleySmoothLSE, VoronoiWorleySmoothPoly,
+        VoronoiWorleyF1, VoronoiWorleyF2, VoronoiWorleyF2MinusF1,
+        VoronoiWorleySmoothExp, VoronoiWorleySmoothPoly,
         VoronoiChebyshevF1, VoronoiChebyshevF2, VoronoiChebyshevF2MinusF1
     }
 
@@ -114,26 +135,8 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
     [SerializeField, Range(1, 3)]
     int dimensions = 1;
 
-    public enum MeshType
-    {
-        SquareGrid,
-        SharedSquareGrid,
-        SharedTriangleGrid,
-        FlatHexagonGrid,
-        PointyHexagonGrid,
-        CubeSphere,
-        SharedCubeSphere,
-        Icosphere,
-        GeoIcosphere,
-        Octasphere,
-        GeoOctasphere,
-        UVSphere
-    };
-    
     [SerializeField]
     bool recalculateNormals, recalculateTangents;
-
-    [SerializeField] private MeshType meshType;
 
     [System.Flags]
     public enum MeshOptimizationMode
@@ -195,6 +198,8 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
             name = "Procedural Mesh"
         };
         GetComponent<MeshFilter>().mesh = mesh;
+        
+        materials[(int)displacement] = new Material(materials[(int)displacement]);
     }
 
     private void OnDrawGizmos()
@@ -281,8 +286,7 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
 
     private void OnValidate() => enabled = true;
 
-    private void Update()
-    {
+    void Update () {
         GenerateMesh();
         enabled = false;
 
@@ -291,8 +295,14 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
         tangents = null;
         triangles = null;
 
+        if (material == MaterialMode.Displacement) {
+            materials[(int)MaterialMode.Displacement].SetFloat(
+                materialIsPlaneId, meshType < MeshType.CubeSphere ? 1f : 0f
+            );
+        }
         GetComponent<MeshRenderer>().material = materials[(int)material];
     }
+
 
     private void GenerateMesh()
     {
@@ -300,10 +310,20 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
         Mesh.MeshData meshData = meshDataArray[0];
 
         surfaceJobs[(int)noiseType, dimensions - 1](
-            meshData, resolution, noiseSettings, domain, displacement,
-            meshJobs[(int)meshType](
-                mesh, meshData, resolution, default,
-                new Vector3(0f, Mathf.Abs(displacement)), true
+            meshData, 
+            resolution, 
+            noiseSettings, 
+            domain, 
+            displacement,
+            meshType < MeshType.CubeSphere,
+            meshJobs[(int)meshType]
+            (
+                mesh, 
+                meshData, 
+                resolution, 
+                default,
+                Vector3.one * Mathf.Abs(displacement), 
+                true
             )
         ).Complete();
 

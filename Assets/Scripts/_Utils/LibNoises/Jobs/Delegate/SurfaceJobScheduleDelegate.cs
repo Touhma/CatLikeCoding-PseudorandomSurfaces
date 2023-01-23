@@ -6,7 +6,12 @@ using UnityEngine;
 namespace Jobs.Delegate
 {
     public delegate JobHandle SurfaceJobScheduleDelegate (
-        Mesh.MeshData meshData, int resolution, NoiseSettings settings, SpaceTRS domain,
-        float displacement, JobHandle dependency
+        Mesh.MeshData meshData, 
+        int resolution, 
+        NoiseSettings settings, 
+        SpaceTRS domain,
+        float displacement, 
+        bool isPlane, 
+        JobHandle dependency
     );
 }
