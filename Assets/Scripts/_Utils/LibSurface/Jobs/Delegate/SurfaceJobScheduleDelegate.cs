@@ -12,6 +12,7 @@ namespace Jobs.Delegate
         SpaceTRS domain,
         float displacement, 
         bool isPlane, 
+        int sphereRadius,
         JobHandle dependency
     );
 }

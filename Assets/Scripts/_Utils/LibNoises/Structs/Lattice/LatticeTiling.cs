@@ -21,8 +21,9 @@ namespace _Utils.NoisesLib.NoisesStructs
             span.p1 = span.p0 + 1;
             span.p1 = select(span.p1, 0, span.p1 == frequency);
 
-            span.t = coordinates - points;
-            span.t = span.t * span.t * span.t * (span.t * (span.t * 6f - 15f) + 10f);
+            float4 t = coordinates - points;
+            span.t = t * t * t * (t * (t * 6f - 15f) + 10f);
+            span.dt = t * t * (t * (t * 30f - 60f) + 30f);
             return span;
         }
 

@@ -5,8 +5,8 @@ using static Unity.Mathematics.math;
 
 namespace _Utils.NoisesLib.NoisesStructs
 {
-    public struct Worley : IVoronoiDistance
-    {
+    public struct Worley : IVoronoiDistance {
+
         public Sample4 GetDistance (float4 x) => new Sample4 {
             v = abs(x),
             dx = select(-1f, 1f, x < 0f)
@@ -21,27 +21,25 @@ namespace _Utils.NoisesLib.NoisesStructs
             dz = z
         };
 
-        public VoronoiData Finalize1D(VoronoiData data) => data;
+        public VoronoiData Finalize1D (VoronoiData data) => data;
 
         public VoronoiData Finalize2D (VoronoiData data) => Finalize3D(data);
 
-        public VoronoiData Finalize3D(VoronoiData data)
-        {
+        public VoronoiData Finalize3D (VoronoiData data) {
             bool4 keepA = data.a.v < 1f;
             data.a.v = select(1f, sqrt(data.a.v), keepA);
             data.a.dx = select(0f, -data.a.dx / data.a.v, keepA);
             data.a.dy = select(0f, -data.a.dy / data.a.v, keepA);
             data.a.dz = select(0f, -data.a.dz / data.a.v, keepA);
-            
+
             bool4 keepB = data.b.v < 1f;
             data.b.v = select(1f, sqrt(data.b.v), keepB);
             data.b.dx = select(0f, -data.b.dx / data.b.v, keepB);
             data.b.dy = select(0f, -data.b.dy / data.b.v, keepB);
             data.b.dz = select(0f, -data.b.dz / data.b.v, keepB);
-            
-            return data;   
+            return data;
         }
-        
+
         public VoronoiData UpdateVoronoiData (VoronoiData data, Sample4 sample) {
             bool4 newMinimum = sample.v < data.a.v;
             data.b = VoronoiHelper.Select(

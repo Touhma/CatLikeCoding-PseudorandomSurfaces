@@ -28,7 +28,7 @@ public struct SurfaceJob<N> : IJobFor where N : struct, INoise
 
     public bool isPlane;
 
-    public float sphereRadius;
+    public int sphereRadius;
 
 
     public void Execute(int i)
@@ -80,7 +80,7 @@ public struct SurfaceJob<N> : IJobFor where N : struct, INoise
 
     Vertex4 SetSphereVertices(Vertex4 v, Sample4 noise)
     {
-        noise.v += 1f;
+        noise.v += sphereRadius;
         noise.dx /= noise.v;
         noise.dy /= noise.v;
         noise.dz /= noise.v;
@@ -127,7 +127,7 @@ public struct SurfaceJob<N> : IJobFor where N : struct, INoise
     }
 
     public static JobHandle ScheduleParallel(
-        Mesh.MeshData meshData, int resolution, NoiseSettings settings, SpaceTRS domain, float displacement, bool isPlane, JobHandle dependency
+        Mesh.MeshData meshData, int resolution, NoiseSettings settings, SpaceTRS domain, float displacement, bool isPlane,int sphereRadius, JobHandle dependency
     ) => new SurfaceJob<N>()
     {
         vertices = meshData.GetVertexData<Stream0>().Reinterpret<Vertex4>(12 * 4),
@@ -135,7 +135,7 @@ public struct SurfaceJob<N> : IJobFor where N : struct, INoise
         domainTRS = domain.Matrix,
         derivativeMatrix = domain.DerivativeMatrix,
         displacement = displacement,
-        sphereRadius = 1f,
+        sphereRadius = sphereRadius,
         isPlane = isPlane
     }.ScheduleParallel(meshData.vertexCount / 4, resolution, dependency);
 }

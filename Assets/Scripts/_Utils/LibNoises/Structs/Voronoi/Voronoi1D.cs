@@ -12,13 +12,12 @@ namespace _Utils.NoisesLib.NoisesStructs
         where F : struct, IVoronoiFunction {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Sample4  GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
+        public Sample4 GetNoise4 (float4x3 positions, SmallXXHash4 hash, int frequency) {
             L l = default;
             D d = default;
             LatticeSpan4 x = l.GetLatticeSpan4(positions.c0, frequency);
 
             VoronoiData data = d.InitialData;
-            data.a.v = data.b.v = 2f;
             for (int u = -1; u <= 1; u++) {
                 SmallXXHash4 h = hash.Eat(l.ValidateSingleStep(x.p0 + u, frequency));
                 data = d.UpdateVoronoiData(data, d.GetDistance(h.Floats01A + u - x.g0));
@@ -26,7 +25,6 @@ namespace _Utils.NoisesLib.NoisesStructs
             Sample4 s = default(F).Evaluate(d.Finalize1D(data));
             s.dx *= frequency;
             return s;
-
         }
     }
 }

@@ -13,6 +13,7 @@ using UnityEngine.Rendering;
 public class ProceduralSurfaceVisualization : MonoBehaviour
 {
     static int materialIsPlaneId = Shader.PropertyToID("_IsPlane");
+    static int materialRadius = Shader.PropertyToID("_Radius");
     
     private static AdvancedMeshJobScheduleDelegate[] meshJobs =
     {
@@ -129,17 +130,13 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
         VoronoiChebyshevF1, VoronoiChebyshevF2, VoronoiChebyshevF2MinusF1
     }
 
-    [SerializeField]
-    NoiseType noiseType;
+    [SerializeField] NoiseType noiseType;
 
-    [SerializeField, Range(1, 3)]
-    int dimensions = 1;
+    [SerializeField, Range(1, 3)] int dimensions = 1;
 
-    [SerializeField]
-    bool recalculateNormals, recalculateTangents;
+    [SerializeField] bool recalculateNormals, recalculateTangents;
 
-    [System.Flags]
-    public enum MeshOptimizationMode
+    [System.Flags] public enum MeshOptimizationMode
     {
         Nothing = 0,
         ReorderIndices = 1,
@@ -149,8 +146,9 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
     [SerializeField] private MeshOptimizationMode meshOptimization;
 
     [SerializeField, Range(1, 300)] private int resolution = 1;
+    [SerializeField, Range(1, 300)] private int radius = 1;
 
-    [SerializeField, Range(-1f, 1f)] float displacement = 0.5f;
+    [SerializeField, Range(-100f, 100f)] float displacement = 0.5f;
 
     [SerializeField] NoiseSettings noiseSettings = NoiseSettings.Default;
 
@@ -184,6 +182,7 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
     [SerializeField] private Material[] materials;
 
     private Mesh mesh;
+    public MeshFilter meshWater;
 
     [System.NonSerialized] private Vector3[] vertices, normals;
 
@@ -299,6 +298,9 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
             materials[(int)MaterialMode.Displacement].SetFloat(
                 materialIsPlaneId, meshType < MeshType.CubeSphere ? 1f : 0f
             );
+            materials[(int)MaterialMode.Displacement].SetFloat(
+                materialRadius, radius
+            );
         }
         GetComponent<MeshRenderer>().material = materials[(int)material];
     }
@@ -306,6 +308,17 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
 
     private void GenerateMesh()
     {
+        Mesh.MeshDataArray meshDataArrayWater = Mesh.AllocateWritableMeshData(1);
+        Mesh.MeshData meshDataWater = meshDataArrayWater[0];
+
+        Mesh meshtutar = new Mesh();
+
+        meshJobs[(int)meshType](meshtutar, meshDataWater, resolution, default, Vector3.one * Mathf.Abs(displacement), true).Complete();
+
+        Mesh.ApplyAndDisposeWritableMeshData(meshDataArrayWater, meshtutar);
+
+        meshWater.mesh = meshtutar;
+
         Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
         Mesh.MeshData meshData = meshDataArray[0];
 
@@ -316,6 +329,7 @@ public class ProceduralSurfaceVisualization : MonoBehaviour
             domain, 
             displacement,
             meshType < MeshType.CubeSphere,
+            radius,
             meshJobs[(int)meshType]
             (
                 mesh, 
